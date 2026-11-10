@@ -16,7 +16,7 @@ import kotlinx.coroutines.withContext
 
 /**
  * 管理当前打开的文档与"最近查看"列表。
- * - 列表最多 MAX_RECENTS 条，重复打开同一文件会移到最前
+ * - 列表数量不限，重复打开同一文件会移到最前
  * - 优先记录带持久化 URI 权限的文件（应用内选择器打开），重启后仍可点击
  * - 其他应用"打开方式"跳转的文件（仅临时权限）在应用存活期间也会显示，
  *   权限失效后自动从列表移除
@@ -87,9 +87,8 @@ class ReaderViewModel(app: Application) : AndroidViewModel(app) {
                     infos.add(info)
                 }
             }
-            val truncated = valid.take(MAX_RECENTS)
-            if (truncated != order) writeOrder(truncated)
-            withContext(Dispatchers.Main) { recents = infos.take(MAX_RECENTS) }
+            if (valid != order) writeOrder(valid)
+            withContext(Dispatchers.Main) { recents = infos }
         }
     }
 
@@ -97,7 +96,7 @@ class ReaderViewModel(app: Application) : AndroidViewModel(app) {
         val list = readOrder().toMutableList()
         list.remove(uri.toString())
         list.add(0, uri.toString())
-        writeOrder(list.take(MAX_RECENTS))
+        writeOrder(list)
         refreshRecents()
     }
 
@@ -123,8 +122,4 @@ class ReaderViewModel(app: Application) : AndroidViewModel(app) {
             type = DocType.detect(name, ctx.contentResolver.getType(uri)),
         )
     }.getOrNull()
-
-    companion object {
-        const val MAX_RECENTS = 10
-    }
 }

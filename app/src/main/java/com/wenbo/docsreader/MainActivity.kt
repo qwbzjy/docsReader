@@ -151,7 +151,7 @@ fun HomeScreen(vm: ReaderViewModel) {
                 LazyColumn(Modifier.fillMaxSize()) {
                     item {
                         Text(
-                            stringResource(R.string.recent_files_count, vm.recents.size, ReaderViewModel.MAX_RECENTS),
+                            stringResource(R.string.recent_files),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
