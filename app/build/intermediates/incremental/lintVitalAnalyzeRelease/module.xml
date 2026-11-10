@@ -1,0 +1,19 @@
+<lint-module
+    format="1"
+    dir="/Users/wenbo/android_app/docs_reader/app"
+    name=":app"
+    type="APP"
+    maven="docsReader:app:unspecified"
+    agpVersion="8.13.2"
+    buildFolder="build"
+    bootClassPath="/Users/wenbo/Library/Android/sdk/platforms/android-36.1/android.jar:/Users/wenbo/Library/Android/sdk/build-tools/35.0.0/core-lambda-stubs.jar"
+    javaSourceLevel="17"
+    compileTarget="android-36.1"
+    neverShrinking="true">
+  <lintOptions
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true"/>
+  <variant name="release"/>
+</lint-module>

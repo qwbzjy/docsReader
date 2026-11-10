@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.wenbo.docsreader.app-debug-43:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.wenbo.docsreader.app-main-45:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.wenbo.docsreader.app-debug-43:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.wenbo.docsreader.app-main-45:/drawable/ic_launcher_foreground.xml"
+    }
+]

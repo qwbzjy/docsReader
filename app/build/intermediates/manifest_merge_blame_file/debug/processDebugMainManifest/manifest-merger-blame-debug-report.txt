@@ -1,0 +1,181 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.wenbo.docsreader"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+9        android:targetSdkVersion="36" />
+10
+11    <permission
+11-->[androidx.core:core:1.17.0] /Users/wenbo/.gradle/caches/8.13/transforms/2e33a4983821fd2d5efb7e9d723342a3/transformed/core-1.17.0/AndroidManifest.xml:22:5-24:47
+12        android:name="com.wenbo.docsreader.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+12-->[androidx.core:core:1.17.0] /Users/wenbo/.gradle/caches/8.13/transforms/2e33a4983821fd2d5efb7e9d723342a3/transformed/core-1.17.0/AndroidManifest.xml:23:9-81
+13        android:protectionLevel="signature" />
+13-->[androidx.core:core:1.17.0] /Users/wenbo/.gradle/caches/8.13/transforms/2e33a4983821fd2d5efb7e9d723342a3/transformed/core-1.17.0/AndroidManifest.xml:24:9-44
+14
+15    <uses-permission android:name="com.wenbo.docsreader.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+15-->[androidx.core:core:1.17.0] /Users/wenbo/.gradle/caches/8.13/transforms/2e33a4983821fd2d5efb7e9d723342a3/transformed/core-1.17.0/AndroidManifest.xml:26:5-97
+15-->[androidx.core:core:1.17.0] /Users/wenbo/.gradle/caches/8.13/transforms/2e33a4983821fd2d5efb7e9d723342a3/transformed/core-1.17.0/AndroidManifest.xml:26:22-94
+16
+17    <application
+17-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:4:5-33:19
+18        android:allowBackup="true"
+18-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:5:9-35
+19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+19-->[androidx.core:core:1.17.0] /Users/wenbo/.gradle/caches/8.13/transforms/2e33a4983821fd2d5efb7e9d723342a3/transformed/core-1.17.0/AndroidManifest.xml:28:18-86
+20        android:debuggable="true"
+21        android:extractNativeLibs="false"
+22        android:icon="@mipmap/ic_launcher"
+22-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:6:9-43
+23        android:label="@string/app_name"
+23-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:7:9-41
+24        android:supportsRtl="true"
+24-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:8:9-35
+25        android:theme="@style/Theme.DocsReader" >
+25-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:9:9-48
+26        <activity
+26-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:10:9-32:20
+27            android:name="com.wenbo.docsreader.MainActivity"
+27-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:11:13-41
+28            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode"
+28-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:13:13-94
+29            android:exported="true"
+29-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:12:13-36
+30            android:launchMode="singleTask" >
+30-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:14:13-44
+31            <intent-filter>
+31-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:15:13-18:29
+32                <action android:name="android.intent.action.MAIN" />
+32-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:16:17-69
+32-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:16:25-66
+33
+34                <category android:name="android.intent.category.LAUNCHER" />
+34-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:17:17-77
+34-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:17:27-74
+35            </intent-filter>
+36            <!-- 从其他应用直接打开文档 -->
+37            <intent-filter>
+37-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:20:13-26:29
+38                <action android:name="android.intent.action.VIEW" />
+38-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:21:17-69
+38-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:21:25-66
+39
+40                <category android:name="android.intent.category.DEFAULT" />
+40-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:22:17-76
+40-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:22:27-73
+41                <category android:name="android.intent.category.BROWSABLE" />
+41-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:23:17-78
+41-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:23:27-75
+42
+43                <data android:scheme="content" />
+43-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:24:17-50
+43-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:24:23-47
+44                <data android:mimeType="*/*" />
+44-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:24:17-50
+44-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:25:23-45
+45            </intent-filter>
+46            <intent-filter>
+46-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:27:13-31:29
+47                <action android:name="android.intent.action.SEND" />
+47-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:28:17-69
+47-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:28:25-66
+48
+49                <category android:name="android.intent.category.DEFAULT" />
+49-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:22:17-76
+49-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:22:27-73
+50
+51                <data android:mimeType="*/*" />
+51-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:24:17-50
+51-->/Users/wenbo/android_app/docs_reader/app/src/main/AndroidManifest.xml:25:23-45
+52            </intent-filter>
+53        </activity>
+54        <activity
+54-->[androidx.compose.ui:ui-tooling-android:1.10.3] /Users/wenbo/.gradle/caches/8.13/transforms/39651e2f38af7c338b8ab444908fd111/transformed/ui-tooling/AndroidManifest.xml:23:9-25:39
+55            android:name="androidx.compose.ui.tooling.PreviewActivity"
+55-->[androidx.compose.ui:ui-tooling-android:1.10.3] /Users/wenbo/.gradle/caches/8.13/transforms/39651e2f38af7c338b8ab444908fd111/transformed/ui-tooling/AndroidManifest.xml:24:13-71
+56            android:exported="true" />
+56-->[androidx.compose.ui:ui-tooling-android:1.10.3] /Users/wenbo/.gradle/caches/8.13/transforms/39651e2f38af7c338b8ab444908fd111/transformed/ui-tooling/AndroidManifest.xml:25:13-36
+57
+58        <uses-library
+58-->[androidx.window:window:1.5.0] /Users/wenbo/.gradle/caches/8.13/transforms/e5a12ff94da71e815a8a2a52f9099b13/transformed/window-1.5.0/AndroidManifest.xml:23:9-25:40
+59            android:name="androidx.window.extensions"
+59-->[androidx.window:window:1.5.0] /Users/wenbo/.gradle/caches/8.13/transforms/e5a12ff94da71e815a8a2a52f9099b13/transformed/window-1.5.0/AndroidManifest.xml:24:13-54
+60            android:required="false" />
+60-->[androidx.window:window:1.5.0] /Users/wenbo/.gradle/caches/8.13/transforms/e5a12ff94da71e815a8a2a52f9099b13/transformed/window-1.5.0/AndroidManifest.xml:25:13-37
+61        <uses-library
+61-->[androidx.window:window:1.5.0] /Users/wenbo/.gradle/caches/8.13/transforms/e5a12ff94da71e815a8a2a52f9099b13/transformed/window-1.5.0/AndroidManifest.xml:26:9-28:40
+62            android:name="androidx.window.sidecar"
+62-->[androidx.window:window:1.5.0] /Users/wenbo/.gradle/caches/8.13/transforms/e5a12ff94da71e815a8a2a52f9099b13/transformed/window-1.5.0/AndroidManifest.xml:27:13-51
+63            android:required="false" />
+63-->[androidx.window:window:1.5.0] /Users/wenbo/.gradle/caches/8.13/transforms/e5a12ff94da71e815a8a2a52f9099b13/transformed/window-1.5.0/AndroidManifest.xml:28:13-37
+64
+65        <provider
+65-->[androidx.emoji2:emoji2:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/c9898fefae36356981a280430625e102/transformed/emoji2-1.4.0/AndroidManifest.xml:24:9-32:20
+66            android:name="androidx.startup.InitializationProvider"
+66-->[androidx.emoji2:emoji2:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/c9898fefae36356981a280430625e102/transformed/emoji2-1.4.0/AndroidManifest.xml:25:13-67
+67            android:authorities="com.wenbo.docsreader.androidx-startup"
+67-->[androidx.emoji2:emoji2:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/c9898fefae36356981a280430625e102/transformed/emoji2-1.4.0/AndroidManifest.xml:26:13-68
+68            android:exported="false" >
+68-->[androidx.emoji2:emoji2:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/c9898fefae36356981a280430625e102/transformed/emoji2-1.4.0/AndroidManifest.xml:27:13-37
+69            <meta-data
+69-->[androidx.emoji2:emoji2:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/c9898fefae36356981a280430625e102/transformed/emoji2-1.4.0/AndroidManifest.xml:29:13-31:52
+70                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+70-->[androidx.emoji2:emoji2:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/c9898fefae36356981a280430625e102/transformed/emoji2-1.4.0/AndroidManifest.xml:30:17-75
+71                android:value="androidx.startup" />
+71-->[androidx.emoji2:emoji2:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/c9898fefae36356981a280430625e102/transformed/emoji2-1.4.0/AndroidManifest.xml:31:17-49
+72            <meta-data
+72-->[androidx.lifecycle:lifecycle-process:2.9.4] /Users/wenbo/.gradle/caches/8.13/transforms/b340f2b75dbae589d3ae1b921b131dce/transformed/lifecycle-process-2.9.4/AndroidManifest.xml:29:13-31:52
+73                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+73-->[androidx.lifecycle:lifecycle-process:2.9.4] /Users/wenbo/.gradle/caches/8.13/transforms/b340f2b75dbae589d3ae1b921b131dce/transformed/lifecycle-process-2.9.4/AndroidManifest.xml:30:17-78
+74                android:value="androidx.startup" />
+74-->[androidx.lifecycle:lifecycle-process:2.9.4] /Users/wenbo/.gradle/caches/8.13/transforms/b340f2b75dbae589d3ae1b921b131dce/transformed/lifecycle-process-2.9.4/AndroidManifest.xml:31:17-49
+75            <meta-data
+75-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:29:13-31:52
+76                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+76-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:30:17-85
+77                android:value="androidx.startup" />
+77-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:31:17-49
+78        </provider>
+79
+80        <receiver
+80-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:34:9-52:20
+81            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+81-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:35:13-76
+82            android:directBootAware="false"
+82-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:36:13-44
+83            android:enabled="true"
+83-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:37:13-35
+84            android:exported="true"
+84-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:38:13-36
+85            android:permission="android.permission.DUMP" >
+85-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:39:13-57
+86            <intent-filter>
+86-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:40:13-42:29
+87                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+87-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:17-91
+87-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:25-88
+88            </intent-filter>
+89            <intent-filter>
+89-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:43:13-45:29
+90                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+90-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:17-85
+90-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:25-82
+91            </intent-filter>
+92            <intent-filter>
+92-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:46:13-48:29
+93                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+93-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:17-88
+93-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:25-85
+94            </intent-filter>
+95            <intent-filter>
+95-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:49:13-51:29
+96                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+96-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:17-95
+96-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/wenbo/.gradle/caches/8.13/transforms/72a0b5e574469c7a22392c3de4659d40/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:25-92
+97            </intent-filter>
+98        </receiver>
+99    </application>
+100
+101</manifest>

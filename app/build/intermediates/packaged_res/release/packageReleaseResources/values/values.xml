@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#1A6BFF</color>
+    <string name="app_name">文档阅读</string>
+    <string name="back">返回</string>
+    <string name="load_failed">打开失败</string>
+    <string name="loading">正在加载…</string>
+    <string name="no_recent_files">还没有打开过文档\n点击下方按钮选择要阅读的文档</string>
+    <string name="open_document">打开文档</string>
+    <string name="open_in_picker">重新选择文件</string>
+    <string name="page_of">第 %1$d 页 / 共 %2$d 页</string>
+    <string name="recent_files">最近打开</string>
+    <string name="remove_from_recent">从最近打开中移除</string>
+    <string name="sheet_of">第 %1$d 个工作表 / 共 %2$d 个</string>
+    <string name="unsupported_format">暂不支持该格式</string>
+    <string name="unsupported_message">%1$s\n\n目前支持阅读：Markdown (.md)、PDF (.pdf)、Word (.docx)、Excel (.xlsx)、PPT (.pptx)、纯文本 (.txt/.json/.xml/.csv 等)。\n旧版二进制格式 (.doc/.xls/.ppt) 请先在电脑上另存为新版格式。</string>
+    <style name="Theme.DocsReader" parent="android:Theme.Material.Light.NoActionBar"/>
+</resources>

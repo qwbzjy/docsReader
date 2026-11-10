@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.wenbo.docsreader.OoxmlParseTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-10T07:58:45.264Z" hostname="wenbodeMacBook-Pro.local" time="0.337">
+  <properties/>
+  <testcase name="text_encoding_detection" classname="com.wenbo.docsreader.OoxmlParseTest" time="0.035"/>
+  <testcase name="xlsx_date_serial" classname="com.wenbo.docsreader.OoxmlParseTest" time="0.029"/>
+  <testcase name="rels_path_resolution" classname="com.wenbo.docsreader.OoxmlParseTest" time="0.014"/>
+  <testcase name="xlsx_basic" classname="com.wenbo.docsreader.OoxmlParseTest" time="0.157"/>
+  <testcase name="pptx_basic" classname="com.wenbo.docsreader.OoxmlParseTest" time="0.066"/>
+  <testcase name="docx_basic" classname="com.wenbo.docsreader.OoxmlParseTest" time="0.03"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
