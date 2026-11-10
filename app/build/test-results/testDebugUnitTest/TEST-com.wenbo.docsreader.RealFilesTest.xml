@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.wenbo.docsreader.RealFilesTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-10T07:58:45.611Z" hostname="wenbodeMacBook-Pro.local" time="0.17">
-  <properties/>
-  <testcase name="realDocx" classname="com.wenbo.docsreader.RealFilesTest" time="0.016"/>
-  <testcase name="realPptx" classname="com.wenbo.docsreader.RealFilesTest" time="0.077"/>
-  <testcase name="realXlsx" classname="com.wenbo.docsreader.RealFilesTest" time="0.077"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

@@ -1,0 +1,17 @@
+# Gradle
+.gradle/
+build/
+app/build/
+.kotlin/
+
+# Android Studio / IDE
+.idea/
+*.iml
+.DS_Store
+
+# 本机 SDK 路径等机器相关配置
+local.properties
+
+# 构建产物
+*.apk
+*.aab
