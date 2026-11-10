@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.ParcelFileDescriptor
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -150,9 +151,14 @@ private fun PdfPage(source: PdfSource, page: Int, pagerState: PagerState) {
     val settled = pagerState.settledPage
     LaunchedEffect(page, widthPx, settled) {
         if (widthPx > 0 && bitmap == null && error == null && abs(settled - page) <= 2) {
-            runCatching { source.render(page, widthPx) }
-                .onSuccess { bitmap = it }
-                .onFailure { error = it.message ?: "渲染失败" }
+            try {
+                bitmap = source.render(page, widthPx)
+            } catch (ce: kotlinx.coroutines.CancellationException) {
+                // 翻页/settledPage 变化导致渲染协程被取消：不是错误，
+                // key 变化后本 effect 会重新执行并继续渲染
+            } catch (t: Throwable) {
+                error = t.message ?: t.javaClass.simpleName
+            }
         }
     }
 
@@ -171,28 +177,41 @@ private fun PdfPage(source: PdfSource, page: Int, pagerState: PagerState) {
     }
 }
 
-/** 双指缩放 + 拖动，缩回 1 倍时自动复位。 */
+/** 缩放图片：双击放大/复原；放大后支持双指捏合与拖动平移（未放大时手势让给翻页）。 */
 @Composable
 private fun ZoomableImage(bmp: Bitmap) {
     var scale by remember { mutableFloatStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     var size by remember { mutableStateOf(IntSize.Zero) }
 
-    Image(
-        bitmap = bmp.asImageBitmap(),
-        contentDescription = null,
-        contentScale = ContentScale.Fit,
-        modifier = Modifier
+    Box(
+        Modifier
             .fillMaxSize()
             .onSizeChanged {
                 size = it
                 offset = clampOffset(offset, scale, it)
             }
             .pointerInput(bmp) {
-                detectTransformGestures { _, pan, zoom, _ ->
-                    val newScale = (scale * zoom).coerceIn(1f, 5f)
-                    scale = newScale
-                    offset = clampOffset(Offset(offset.x + pan.x, offset.y + pan.y), newScale, size)
+                // 双击：在 1x 与 2.5x 之间切换
+                detectTapGestures(onDoubleTap = {
+                    if (scale > 1.05f) {
+                        scale = 1f
+                        offset = Offset.Zero
+                    } else {
+                        scale = 2.5f
+                        offset = Offset.Zero
+                    }
+                })
+            }
+            .pointerInput(scale > 1.05f) {
+                // 仅在放大状态下拦截拖动/捏合，否则单指滑动留给 pager 翻页
+                if (scale > 1.05f) {
+                    detectTransformGestures { _, pan, zoom, _ ->
+                        val newScale = (scale * zoom).coerceIn(1f, 5f)
+                        scale = newScale
+                        offset = if (newScale <= 1.05f) Offset.Zero
+                        else clampOffset(Offset(offset.x + pan.x, offset.y + pan.y), newScale, size)
+                    }
                 }
             }
             .graphicsLayer {
@@ -201,7 +220,14 @@ private fun ZoomableImage(bmp: Bitmap) {
                 translationX = offset.x
                 translationY = offset.y
             },
-    )
+        contentAlignment = Alignment.Center,
+    ) {
+        Image(
+            bitmap = bmp.asImageBitmap(),
+            contentDescription = null,
+            contentScale = ContentScale.Fit,
+        )
+    }
 }
 
 private fun clampOffset(o: Offset, scale: Float, size: IntSize): Offset {
