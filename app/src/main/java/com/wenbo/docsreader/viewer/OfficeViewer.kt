@@ -147,7 +147,7 @@ private fun OfficeWebView(html: String, baseUrl: String?, fitWidth: Boolean, key
                     javaScriptEnabled = false
                     allowFileAccess = true
                     allowContentAccess = false
-                    builtInZoomControls = !fitWidth
+                    builtInZoomControls = true // Word/Excel/PPT 均支持双指缩放
                     displayZoomControls = false
                     // PPT 整页适配：以幻灯片逻辑宽度渲染，WebView 自动缩放到屏宽
                     useWideViewPort = fitWidth

@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wenbo.docsreader.ui.DocsReaderTheme
 import com.wenbo.docsreader.util.UriUtil
+import com.wenbo.docsreader.viewer.HtmlViewer
 import com.wenbo.docsreader.viewer.MarkdownViewer
 import com.wenbo.docsreader.viewer.OfficeViewer
 import com.wenbo.docsreader.viewer.PdfViewer
@@ -212,6 +213,7 @@ fun TypeBadge(type: DocType) {
         DocType.WORD -> "DOC" to Color(0xFF2B579A)
         DocType.EXCEL -> "XLS" to Color(0xFF217346)
         DocType.PPT -> "PPT" to Color(0xFFD24726)
+        DocType.HTML -> "HTML" to Color(0xFF7C3AED)
         DocType.TEXT -> "TXT" to Color(0xFF57606A)
         DocType.UNSUPPORTED -> "?" to Color(0xFF9199A1)
     }
@@ -253,6 +255,7 @@ fun ViewerScreen(vm: ReaderViewModel, doc: DocumentInfo) {
                 DocType.MARKDOWN -> MarkdownViewer(doc)
                 DocType.PDF -> PdfViewer(doc)
                 DocType.WORD, DocType.EXCEL, DocType.PPT -> OfficeViewer(doc)
+                DocType.HTML -> HtmlViewer(doc)
                 DocType.TEXT -> TextViewer(doc)
                 DocType.UNSUPPORTED -> UnsupportedView(doc)
             }

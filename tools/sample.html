@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML 测试文档</title>
+<style>
+  body { font-family: sans-serif; margin: 16px; line-height: 1.6; }
+  h1 { color: #1a6bff; border-bottom: 2px solid #d6e4ff; padding-bottom: 6px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #cbd5e1; padding: 6px 10px; text-align: left; }
+  th { background: #eef2f7; }
+  .card { background: #f6f8fa; border-radius: 8px; padding: 12px; margin: 12px 0; }
+  code { background: #f0f1f3; padding: 2px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<h1>HTML 阅读测试</h1>
+<div class="card">
+  这是一个内联样式的卡片段落，用于验证 <code>WebView</code> 渲染 HTML 的效果。
+  <strong>加粗</strong>、<em>斜体</em>、<span style="color:#d1242f">彩色文字</span> 都应正常显示。
+</div>
+<h2>表格</h2>
+<table>
+  <tr><th>格式</th><th>解析方式</th><th>状态</th></tr>
+  <tr><td>Markdown</td><td>Markwon 原生渲染</td><td>✅</td></tr>
+  <tr><td>PDF</td><td>PdfRenderer</td><td>✅</td></tr>
+  <tr><td>Office</td><td>OOXML → HTML</td><td>✅</td></tr>
+  <tr><td>HTML</td><td>WebView</td><td>✅</td></tr>
+</table>
+<h2>脚本测试（点击按钮变色）</h2>
+<button id="btn">点我</button>
+<script>
+  document.getElementById('btn').addEventListener('click', function () {
+    document.body.style.backgroundColor =
+      document.body.style.backgroundColor === 'rgb(255, 250, 230)' ? '' : '#fffae6';
+  });
+</script>
+</body>
+</html>

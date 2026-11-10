@@ -4,7 +4,7 @@ package com.wenbo.docsreader
  * 根据文件名扩展名和 MIME 类型判断文档类型。
  */
 enum class DocType {
-    MARKDOWN, PDF, WORD, EXCEL, PPT, TEXT, UNSUPPORTED;
+    MARKDOWN, PDF, WORD, EXCEL, PPT, HTML, TEXT, UNSUPPORTED;
 
     companion object {
         fun detect(fileName: String, mimeType: String?): DocType {
@@ -15,9 +15,10 @@ enum class DocType {
                 ext == "docx" -> WORD
                 ext == "xlsx" -> EXCEL
                 ext in setOf("pptx", "pptm") -> PPT
+                ext in setOf("html", "htm") -> HTML
                 ext in setOf(
                     "txt", "log", "json", "xml", "csv", "tsv", "yaml", "yml",
-                    "html", "htm", "ini", "conf", "properties", "code",
+                    "ini", "conf", "properties", "code",
                     "kt", "java", "py", "js", "ts", "c", "cpp", "h", "go", "rs", "sh", "sql", "toml"
                 ) -> TEXT
                 // 扩展名不可靠时回退到 MIME 判断
@@ -35,6 +36,7 @@ enum class DocType {
                     "application/vnd.openxmlformats-officedocument.presentationml.presentation",
                     "application/vnd.openxmlformats-officedocument.presentationml.slideshow"
                 ) -> PPT
+                mimeType == "text/html" -> HTML
                 mimeType != null && (mimeType.startsWith("text/") || mimeType in setOf("application/json", "application/xml")) -> TEXT
                 else -> UNSUPPORTED
             }

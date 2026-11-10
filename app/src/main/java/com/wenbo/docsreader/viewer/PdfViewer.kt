@@ -8,8 +8,8 @@ import android.net.Uri
 import android.os.ParcelFileDescriptor
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -177,12 +177,21 @@ private fun PdfPage(source: PdfSource, page: Int, pagerState: PagerState) {
     }
 }
 
-/** 缩放图片：双击放大/复原；放大后支持双指捏合与拖动平移（未放大时手势让给翻页）。 */
+/**
+ * 缩放图片：
+ * - 双指捏合：任意缩放倍率下都可用
+ * - 双击：在 1x 与 2.5x 之间切换
+ * - 放大后单指拖动平移；1x 时单指横滑留给 pager 翻页
+ */
 @Composable
 private fun ZoomableImage(bmp: Bitmap) {
     var scale by remember { mutableFloatStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     var size by remember { mutableStateOf(IntSize.Zero) }
+
+    // 单次手势过程中的临时量，避免每个事件都触发重组
+    var gz by remember { mutableFloatStateOf(1f) }
+    var gp by remember { mutableStateOf(Offset.Zero) }
 
     Box(
         Modifier
@@ -192,25 +201,46 @@ private fun ZoomableImage(bmp: Bitmap) {
                 offset = clampOffset(offset, scale, it)
             }
             .pointerInput(bmp) {
-                // 双击：在 1x 与 2.5x 之间切换
                 detectTapGestures(onDoubleTap = {
-                    if (scale > 1.05f) {
-                        scale = 1f
-                        offset = Offset.Zero
-                    } else {
-                        scale = 2.5f
-                        offset = Offset.Zero
-                    }
+                    scale = if (scale > 1.05f) 1f else 2.5f
+                    offset = Offset.Zero
                 })
             }
-            .pointerInput(scale > 1.05f) {
-                // 仅在放大状态下拦截拖动/捏合，否则单指滑动留给 pager 翻页
-                if (scale > 1.05f) {
-                    detectTransformGestures { _, pan, zoom, _ ->
-                        val newScale = (scale * zoom).coerceIn(1f, 5f)
+            .pointerInput(bmp) {
+                awaitEachGesture {
+                    // awaitEachGesture 在首个手指按下时启动本 block
+                    gz = 1f
+                    gp = Offset.Zero
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        val pressed = event.changes.filter { it.pressed }
+                        if (pressed.size >= 2) {
+                            // 双指：捏合缩放 + 平移，消费全部触点
+                            val a = pressed[0]
+                            val b = pressed[1]
+                            val prevDist = (a.previousPosition - b.previousPosition).getDistance()
+                            val dist = (a.position - b.position).getDistance()
+                            if (prevDist > 1f && dist > 1f) gz *= dist / prevDist
+                            gp += (a.position + b.position) / 2f -
+                                (a.previousPosition + b.previousPosition) / 2f
+                            pressed.forEach { it.consume() }
+                        } else if (pressed.size == 1) {
+                            val c = pressed[0]
+                            if (scale > 1.05f || gz != 1f) {
+                                // 已放大（或本次已捏合过）：单指作为平移
+                                gp += c.position - c.previousPosition
+                                c.consume()
+                            }
+                            // 1x 且未捏合：不消费，留给 pager 翻页
+                        } else {
+                            break
+                        }
+                    }
+                    if (gz != 1f || (scale > 1.05f && gp != Offset.Zero)) {
+                        val newScale = (scale * gz).coerceIn(1f, 5f)
                         scale = newScale
-                        offset = if (newScale <= 1.05f) Offset.Zero
-                        else clampOffset(Offset(offset.x + pan.x, offset.y + pan.y), newScale, size)
+                        offset = if (newScale <= 1.01f) Offset.Zero
+                        else clampOffset(offset + gp, newScale, size)
                     }
                 }
             }
