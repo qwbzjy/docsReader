@@ -8,8 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,15 +27,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.FileOpen
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -105,17 +102,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-/** 构造"打开文档"的 SAF 选择意图（任意文件类型，靠扩展名识别格式）。 */
-internal fun openDocumentIntent(): Intent =
-    Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-        addCategory(Intent.CATEGORY_OPENABLE)
-        type = "*/*"
-        addFlags(
-            Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION,
-        )
-    }
-
 @Composable
 fun AppRoot(vm: ReaderViewModel) {
     val doc = vm.doc
@@ -130,12 +116,6 @@ fun AppRoot(vm: ReaderViewModel) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(vm: ReaderViewModel) {
-    val picker = rememberLauncherForActivityResult(
-        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult(),
-    ) { result ->
-        val uri = if (result.resultCode == android.app.Activity.RESULT_OK) result.data?.data else null
-        if (uri != null) vm.openFromPicker(uri)
-    }
     val treePicker = rememberLauncherForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.OpenDocumentTree(),
     ) { uri ->
@@ -148,6 +128,12 @@ fun HomeScreen(vm: ReaderViewModel) {
                 title = { Text(stringResource(R.string.app_name)) },
                 actions = {
                     TextButton(onClick = { treePicker.launch(null) }) {
+                        Icon(
+                            Icons.Filled.FolderOpen,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(Modifier.width(4.dp))
                         Text(stringResource(R.string.open_folder), fontSize = 14.sp)
                     }
                 },
@@ -156,17 +142,12 @@ fun HomeScreen(vm: ReaderViewModel) {
                 ),
             )
         },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { picker.launch(openDocumentIntent()) }) {
-                Icon(Icons.Filled.FileOpen, contentDescription = stringResource(R.string.open_document))
-            }
-        },
     ) { padding ->
         Column(Modifier.padding(padding).fillMaxSize()) {
             if (vm.recents.isEmpty()) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
-                        "点击右下角按钮选择文档\n支持 Markdown / PDF / Word / Excel / PPT / 文本",
+                        "点击右上角「打开文件夹」选择文档目录\n支持 Markdown / PDF / Word / Excel / PPT / 文本\nMarkdown 相对路径图片需从文件夹内打开",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
