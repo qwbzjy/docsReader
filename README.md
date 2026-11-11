@@ -6,15 +6,18 @@
 
 | 格式 | 扩展名 | 渲染方式 |
 |------|--------|----------|
-| Markdown | .md .markdown | Markwon 原生渲染（表格/删除线/任务列表） |
+| Markdown | .md .markdown | Markwon 原生渲染（表格/删除线/任务列表/图片） |
 | PDF | .pdf | 系统 PdfRenderer，横向翻页 + 双指缩放 |
-| Word | .docx | 解析 OOXML → HTML（标题/加粗斜体/列表/表格合并单元格/超链接/图片） |
-| Excel | .xlsx | 解析 OOXML → 表格 HTML（共享字符串/日期格式/合并单元格，多表滑动切换） |
-| PPT | .pptx | 解析 OOXML → 逐页幻灯片（文字/颜色/字号/表格/图片，保持版面位置） |
+| Word | .docx / .doc | docx：解析 OOXML → HTML（标题/加粗斜体/列表/表格合并单元格/超链接/图片）；.doc：POI HWPF 文本流 |
+| Excel | .xlsx / .xls | 解析 → 表格 HTML（共享字符串/日期格式/合并单元格，多表滑动切换） |
+| PPT | .pptx / .ppt / .pps | pptx：逐页幻灯片保持版面；.ppt：二进制记录扫描按页提取文本 |
 | HTML | .html .htm | WebView 渲染（支持内联脚本/CSS、网络资源、双指缩放） |
 | 纯文本 | .txt .json .xml .csv .log 等 | 自动识别 UTF-8 / GBK 编码 |
 
 > 旧版二进制格式（.doc/.xls/.ppt）不支持，请在电脑上另存为对应的新版格式。
+> 旧版 .doc/.xls/.ppt 支持只读文本/表格提取（复杂排版简化为文档流）。
+> Markdown 图片支持 http(s) 网络图、`data:` 内联图与 `file://` 绝对路径；
+> **相对路径图片**请用首页「打开文件夹」授权文档所在目录后从浏览页打开（自动解析并加载）。
 
 ## 功能
 

@@ -3,7 +3,9 @@ package com.wenbo.docsreader
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.DocumentsContract
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
@@ -33,6 +35,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -40,9 +43,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,12 +59,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wenbo.docsreader.ui.DocsReaderTheme
+import com.wenbo.docsreader.ui.Load
+import com.wenbo.docsreader.ui.rememberLoaded
+import com.wenbo.docsreader.util.TreeEntry
 import com.wenbo.docsreader.util.UriUtil
 import com.wenbo.docsreader.viewer.HtmlViewer
 import com.wenbo.docsreader.viewer.MarkdownViewer
 import com.wenbo.docsreader.viewer.OfficeViewer
 import com.wenbo.docsreader.viewer.PdfViewer
 import com.wenbo.docsreader.viewer.TextViewer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
 
@@ -107,10 +119,11 @@ internal fun openDocumentIntent(): Intent =
 @Composable
 fun AppRoot(vm: ReaderViewModel) {
     val doc = vm.doc
-    if (doc == null) {
-        HomeScreen(vm)
-    } else {
-        ViewerScreen(vm, doc)
+    val tree = vm.browseTree
+    when {
+        doc != null -> ViewerScreen(vm, doc)
+        tree != null -> FolderBrowserScreen(vm, tree)
+        else -> HomeScreen(vm)
     }
 }
 
@@ -123,11 +136,21 @@ fun HomeScreen(vm: ReaderViewModel) {
         val uri = if (result.resultCode == android.app.Activity.RESULT_OK) result.data?.data else null
         if (uri != null) vm.openFromPicker(uri)
     }
+    val treePicker = rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.OpenDocumentTree(),
+    ) { uri ->
+        if (uri != null) vm.openTree(uri)
+    }
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.app_name)) },
+                actions = {
+                    TextButton(onClick = { treePicker.launch(null) }) {
+                        Text(stringResource(R.string.open_folder), fontSize = 14.sp)
+                    }
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                 ),
@@ -160,7 +183,11 @@ fun HomeScreen(vm: ReaderViewModel) {
                         )
                     }
                     items(vm.recents, key = { it.uri.toString() }) { item ->
-                        RecentRow(item, onOpen = { vm.openDocument(item.uri) }, onDelete = { vm.removeRecent(item.uri) })
+                        RecentRow(
+                            item,
+                            onOpen = { vm.openDocument(item.uri, item.treeUri) },
+                            onDelete = { vm.removeRecent(item.uri) },
+                        )
                     }
                 }
             }
@@ -285,11 +312,125 @@ fun UnsupportedView(doc: DocumentInfo) {
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                "目前支持阅读：Markdown (.md)、PDF (.pdf)、Word (.docx)、Excel (.xlsx)、PPT (.pptx)、纯文本 (.txt 等)。" +
-                    "旧版二进制格式 (.doc/.xls/.ppt) 请先在电脑上另存为新版格式。",
+                "目前支持阅读：Markdown (.md)、PDF (.pdf)、Word (.docx/.doc)、Excel (.xlsx/.xls)、" +
+                    "PPT (.pptx/.ppt)、HTML (.html/.htm)、纯文本 (.txt/.json/.xml/.csv 等)。\n" +
+                    "旧版 .doc/.xls/.ppt 以纯文本/表格形式阅读（复杂排版简化）。",
                 fontSize = 13.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+        }
+    }
+}
+
+/**
+ * 文件夹浏览页：基于 SAF 树授权列目录。
+ * 从授权根开始逐级进入，点击文档直接打开（带来源树，
+ * Markdown 可解析同目录相对路径图片）。
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FolderBrowserScreen(vm: ReaderViewModel, treeUri: Uri) {
+    val ctx = androidx.compose.ui.platform.LocalContext.current
+    val rootDocId = remember(treeUri) { DocumentsContract.getTreeDocumentId(treeUri) }
+    var path by remember(treeUri) { mutableStateOf(listOf(rootDocId)) }
+    val current = path.last()
+
+    BackHandler(enabled = path.size > 1) { path = path.dropLast(1) }
+
+    val load = rememberLoaded(treeUri to current) {
+        kotlinx.coroutines.withContext(Dispatchers.IO) {
+            com.wenbo.docsreader.util.TreeResources.listChildren(ctx, treeUri, current)
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            androidx.compose.material3.TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = {
+                        if (path.size > 1) path = path.dropLast(1) else vm.closeBrowser()
+                    }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                    }
+                },
+                title = {
+                    Text(
+                        current.substringAfterLast('/').substringAfterLast(':').ifBlank { "文件夹" },
+                        fontSize = 16.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                },
+            )
+        },
+    ) { padding ->
+        Box(Modifier.padding(padding).fillMaxSize()) {
+            when (val l = load) {
+                Load.Loading -> Box(Modifier.fillMaxSize(), Alignment.Center) { CircularProgressIndicator() }
+                is Load.Failure -> Box(Modifier.fillMaxSize(), Alignment.Center) {
+                    Text("读取目录失败：${l.message}", color = MaterialTheme.colorScheme.error)
+                }
+                is Load.Success -> {
+                    if (l.value.isEmpty()) {
+                        Box(Modifier.fillMaxSize(), Alignment.Center) {
+                            Text("（空文件夹）", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                    } else {
+                        LazyColumn(Modifier.fillMaxSize()) {
+                            items(l.value, key = { it.docId }) { entry ->
+                                BrowserRow(entry) {
+                                    if (entry.isDir) {
+                                        path = path + entry.docId
+                                    } else {
+                                        val docUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, entry.docId)
+                                        vm.openDocument(docUri, treeUri)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun BrowserRow(entry: TreeEntry, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 3.dp)
+            .clickable(onClick = onClick),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+    ) {
+        Row(Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
+            if (entry.isDir) {
+                Box(
+                    Modifier.size(44.dp).background(
+                        Color(0xFF1A6BFF).copy(alpha = 0.10f), RoundedCornerShape(8.dp),
+                    ),
+                    contentAlignment = Alignment.Center,
+                ) { Text("📁", fontSize = 18.sp) }
+            } else {
+                TypeBadge(DocType.detect(entry.name, entry.mime))
+            }
+            Spacer(Modifier.width(12.dp))
+            Column(Modifier.weight(1f)) {
+                Text(
+                    entry.name, fontSize = 15.sp, maxLines = 1, overflow = TextOverflow.Ellipsis,
+                )
+                if (!entry.isDir && entry.size >= 0) {
+                    Text(
+                        UriUtil.formatSize(entry.size),
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+            if (entry.isDir) {
+                Text("›", fontSize = 20.sp, color = MaterialTheme.colorScheme.outline)
+            }
         }
     }
 }

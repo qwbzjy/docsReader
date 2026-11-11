@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">文档阅读</string>
     <string name="open_document">打开文档</string>
+    <string name="open_folder">打开文件夹</string>
     <string name="recent_files">最近查看</string>
     <string name="no_recent_files">还没有查看过文档\n点击下方按钮选择要阅读的文档</string>
     <string name="unsupported_format">暂不支持该格式</string>

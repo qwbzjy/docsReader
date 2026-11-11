@@ -57,12 +57,13 @@ object ZipUtil {
         runCatching { dir.deleteRecursively() }
     }
 
-    /** 清理所有过期缓存（超过 1 天未修改的） */
+    /** 清理所有过期缓存（超过 1 天未修改的）：ooxml 解压目录 + markdown 图片缓存 */
     fun cleanStaleCache(ctx: Context) {
-        val root = File(ctx.cacheDir, "ooxml")
         val cutoff = System.currentTimeMillis() - 24L * 3600 * 1000
-        root.listFiles()?.forEach { d ->
-            if (d.lastModified() < cutoff) cleanDir(d)
+        listOf(File(ctx.cacheDir, "ooxml"), File(ctx.cacheDir, "tree")).forEach { root ->
+            root.listFiles()?.forEach { d ->
+                if (d.lastModified() < cutoff) cleanDir(d)
+            }
         }
     }
 }
