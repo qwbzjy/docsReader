@@ -260,7 +260,7 @@ fun ViewerScreen(vm: ReaderViewModel, doc: DocumentInfo) {
     ) { padding ->
         Box(Modifier.padding(padding).fillMaxSize()) {
             when (doc.type) {
-                DocType.MARKDOWN -> MarkdownViewer(doc)
+                DocType.MARKDOWN -> MarkdownViewer(doc) { vm.openDocument(it, doc.treeUri) }
                 DocType.PDF -> PdfViewer(doc)
                 DocType.WORD, DocType.EXCEL, DocType.PPT -> OfficeViewer(doc)
                 DocType.HTML -> HtmlViewer(doc)
