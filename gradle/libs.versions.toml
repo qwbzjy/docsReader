@@ -7,6 +7,8 @@ coreKtx = "1.17.0"
 lifecycle = "2.9.4"
 coroutines = "1.10.2"
 markwon = "4.6.2"
+poi = "5.2.3"
+desugar = "2.1.5"
 junit = "4.13.2"
 
 [plugins]
@@ -29,8 +31,14 @@ androidx-compose-material-icons = { group = "androidx.compose.material", name = 
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 
 markwon-core = { group = "io.noties.markwon", name = "core", version.ref = "markwon" }
+markwon-image = { group = "io.noties.markwon", name = "image", version.ref = "markwon" }
 markwon-ext-tables = { group = "io.noties.markwon", name = "ext-tables", version.ref = "markwon" }
 markwon-ext-strikethrough = { group = "io.noties.markwon", name = "ext-strikethrough", version.ref = "markwon" }
 markwon-ext-tasklist = { group = "io.noties.markwon", name = "ext-tasklist", version.ref = "markwon" }
+
+# 旧版二进制 Office 格式（.doc/.xls/.ppt）解析
+poi = { group = "org.apache.poi", name = "poi", version.ref = "poi" }
+poi-scratchpad = { group = "org.apache.poi", name = "poi-scratchpad", version.ref = "poi" }
+desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }

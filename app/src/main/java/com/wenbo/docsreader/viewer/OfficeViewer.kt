@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.wenbo.docsreader.DocumentInfo
 import com.wenbo.docsreader.DocType
+import com.wenbo.docsreader.legacy.LegacyOffice
 import com.wenbo.docsreader.ooxml.DocxToHtml
 import com.wenbo.docsreader.ooxml.PptxToHtml
 import com.wenbo.docsreader.ooxml.XlsxToHtml
@@ -47,12 +48,13 @@ private class OfficePages(
  * Word / Excel / PPT 查看器：
  * 后台线程解析 OOXML 为 HTML，交给 WebView 渲染；
  * 多页文档（多工作表 / 多幻灯片）用左右滑动 + 页签跳转。
+ * 旧版二进制格式（.doc/.xls/.ppt）由 LegacyOffice（Apache POI / 记录扫描）解析。
  */
 @Composable
 fun OfficeViewer(doc: DocumentInfo) {
     val ctx = LocalContext.current
     val load = rememberLoaded(doc.uri) {
-        withContext(Dispatchers.IO) { parseOffice(ctx, doc.uri, doc.type) }
+        withContext(Dispatchers.IO) { parseOffice(ctx, doc) }
     }
     when (load) {
         Load.Loading -> Centered { CircularProgressIndicator() }
@@ -73,9 +75,36 @@ fun OfficeViewer(doc: DocumentInfo) {
 
 private suspend fun parseOffice(
     ctx: android.content.Context,
-    uri: Uri,
-    type: DocType,
+    doc: DocumentInfo,
 ): OfficePages {
+    val uri = doc.uri
+    val type = doc.type
+
+    // ---- 旧版二进制格式 ----
+    val legacyExt = doc.name.substringAfterLast('.', "").lowercase()
+    if (legacyExt in setOf("doc", "xls", "ppt", "pps", "pot")) {
+        val file = ZipUtil.copyToCache(ctx, uri, legacyExt)
+        try {
+            return when (type) {
+                DocType.WORD -> OfficePages(listOf("正文"), listOf(LegacyOffice.docToHtml(file)), null, false)
+                DocType.EXCEL -> {
+                    val sheets = LegacyOffice.xlsToSheets(file)
+                    if (sheets.isEmpty()) throw IllegalArgumentException("没有可用的工作表")
+                    OfficePages(sheets.map { it.name }, sheets.map { it.html }, null, false)
+                }
+                DocType.PPT -> {
+                    val slides = LegacyOffice.pptToSlides(file)
+                    if (slides.isEmpty()) throw IllegalArgumentException("没有可用的幻灯片")
+                    OfficePages(slides.indices.map { "第${it + 1}页" }, slides, null, false)
+                }
+                else -> throw IllegalArgumentException("不支持的类型")
+            }
+        } finally {
+            ZipUtil.cleanDir(ZipUtil.docDir(ctx, uri))
+        }
+    }
+
+    // ---- OOXML 新版格式 ----
     val ext = when (type) {
         DocType.WORD -> "docx"
         DocType.EXCEL -> "xlsx"

@@ -32,6 +32,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        // Apache POI 需要 java.time 等 JDK 库支持
+        isCoreLibraryDesugaringEnabled = true
     }
     buildFeatures {
         compose = true
@@ -58,9 +60,16 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.markwon.core)
+    implementation(libs.markwon.image)
     implementation(libs.markwon.ext.tables)
     implementation(libs.markwon.ext.strikethrough)
     implementation(libs.markwon.ext.tasklist)
+
+    // 旧版二进制 Office 格式（.doc/.xls/.ppt）
+    // 注意：POI 5.2 运行时硬依赖 log4j-api（无 provider 时自动退化为 SimpleLogger）
+    implementation(libs.poi)
+    implementation(libs.poi.scratchpad)
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     testImplementation(libs.junit)
 }

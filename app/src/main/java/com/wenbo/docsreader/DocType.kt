@@ -12,9 +12,9 @@ enum class DocType {
             return when {
                 ext in setOf("md", "markdown", "mdown", "mkd") -> MARKDOWN
                 ext == "pdf" -> PDF
-                ext == "docx" -> WORD
-                ext == "xlsx" -> EXCEL
-                ext in setOf("pptx", "pptm") -> PPT
+                ext == "docx" || ext == "doc" -> WORD
+                ext == "xlsx" || ext == "xls" -> EXCEL
+                ext in setOf("pptx", "pptm", "ppt", "pps", "pot") -> PPT
                 ext in setOf("html", "htm") -> HTML
                 ext in setOf(
                     "txt", "log", "json", "xml", "csv", "tsv", "yaml", "yml",
@@ -38,16 +38,21 @@ enum class DocType {
                 ) -> PPT
                 mimeType == "text/html" -> HTML
                 mimeType != null && (mimeType.startsWith("text/") || mimeType in setOf("application/json", "application/xml")) -> TEXT
+                // 旧版 MIME
+                mimeType == "application/msword" -> WORD
+                mimeType == "application/vnd.ms-excel" -> EXCEL
+                mimeType == "application/vnd.ms-powerpoint" -> PPT
                 else -> UNSUPPORTED
             }
         }
     }
 }
 
-/** 一个待打开的文档。 */
+/** 一个待打开的文档。treeUri 非空表示来自"文件夹授权"，支持解析相对路径资源。 */
 data class DocumentInfo(
     val uri: android.net.Uri,
     val name: String,
     val size: Long,
     val type: DocType,
+    val treeUri: android.net.Uri? = null,
 )
